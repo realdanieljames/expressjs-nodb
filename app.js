@@ -1,13 +1,12 @@
 const express = require('express')
 const path = require('path')
+const morgan = require('morgan')
 const app = express();
-
 // dotenv
 require('dotenv').config();
 
+const userRoutes = require('./routes/userRoutes')
 
-const logger = require('./middlewares/logger')
-const timer  = require('./middlewares/timer')
 
 
 // name a port variable
@@ -21,32 +20,31 @@ const port = process.env.PORT || 3000;
 // i want o look for static files
 // for every middleware that runs everytime
 // path helps to concatenate with dirname
-// app.use(express.static(path.join(__dirname, 'public')))
-
-// have hte middleware run everytime
-
-// app.use(logger)
-app.use(timer)
 
 
-let users = [
-    { id: '1', name: 'jd', email: 'jd@me.com', password: '123' },
-    { id: '2', name: 'paul', email: 'paul@me.com', password: '123' },
-    { id: '3', name: 'lois', email: 'lois@me.com', password: '123' },
-    { id: '4', name: 'sidney', email: 'sidney@me.com', password: '123' },
-    { id: '5', name: 'canton', email: 'canton@me.com', password: '123' },
-];
-
-// now lets create a route 
-// get information .get , no middleware, 
-app.get('/', (req, res) => {
-    res.status(200).json({ confirmations: 'success', users })
-})
+// general middleware
+// this is how we reach our routes
+// have the middleware run everytime
+app.use(morgan('dev'))
+app.use(express.json())
 
 
+//handle url encoded data from a form
+app.use(express.urlencoded({extended: true}))
+
+
+
+//routes middleware
+// set a path for users
+// parent route
+// beginning of our route
+//api   version1  users
+app.use('/api/v1/users', userRoutes)
 
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}`)
-    
-})     
+
+})
+
+
