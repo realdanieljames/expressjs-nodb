@@ -20,6 +20,7 @@ const port = process.env.PORT || 3000;
 // i want o look for static files
 // for every middleware that runs everytime
 // path helps to concatenate with dirname
+// app.use(express.static(path.join))
 
 
 // general middleware
